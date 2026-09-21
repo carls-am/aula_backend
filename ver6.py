@@ -263,7 +263,7 @@ def listar_livros():
         FROM livros
         JOIN autores
         ON livros.autorid = autores.id
-        ORDER BY livro.id
+        ORDER BY livros.id
     """
     ).fetchall()
 
