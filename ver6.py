@@ -214,7 +214,7 @@ def cadastrar_livro():
     autor = conexao.execute("""
         SELECT id
         FROM autores
-        WHERE id = autorid
+        WHERE id = ?
         """, (autorid,)).fetchone()
 
     if autor is None:
