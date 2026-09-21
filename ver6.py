@@ -363,6 +363,35 @@ def atualizar_livro(id):
         "Aviso": "o macaco digitou certo agora"
     }), 201
 
+
+#◆ ▬▬▬▬▬▬ ❴✪❵ ▬▬▬▬▬▬ ◆
+#     CRUD - DELETE
+#◆ ▬▬▬▬▬▬ ❴✪❵ ▬▬▬▬▬▬ ◆
+
+@app.route("/livros/<int:id>", methods=["DELETE"])
+def excluir_livros(id):
+
+    conexao = conectar_dados()
+
+    resultado = conexao.execute(
+        "DELETE FROM livros WHERE id = ?",
+        (id,)
+    )
+
+    conexao.commit()
+
+    conexao.close()
+
+    if resultado.rowcount==0:
+        return jsonify({
+            "Aviso": "acabou"
+        }), 404
+
+    return jsonify({
+        "Aviso": "O livro foi mandado para uma ilha remota no sul da ásia"
+    })
+
+
 if __name__ ==  "__main__":
     criar_tabelas()
     app.run(debug=True)
