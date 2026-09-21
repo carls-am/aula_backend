@@ -3,6 +3,10 @@ import sqlite3
 
 app = Flask(__name__)
 
+#■█■█■█■█■█■█■█■█■█■█■█■█■█■
+# CONFIGURAR BANCO DE DADOS
+#■█■█■█■█■█■█■█■█■█■█■█■█■█■
+
 def conectar_dados():
     conexao = sqlite3.connect("biblioteca3.db")
     conexao.row_factory = sqlite3.Row
@@ -45,6 +49,9 @@ def start():
         "versao": "pje"
     })
 
+#■█■█■█■█■█■█■█■█■█■█■█■█■█■
+#    CONFIGURAR AUTORES
+#■█■█■█■█■█■█■█■█■█■█■█■█■█■
 
 #◆ ▬▬▬▬▬▬ ❴✪❵ ▬▬▬▬▬▬ ◆
 #     CRUD - CREATE
@@ -183,6 +190,63 @@ def excluir_autor(id):
     return jsonify({
         "Aviso": "Autor foi mandado para uma ilha remota no leste da africa sem nenhum contato humano"
     })
+
+#■█■█■█■█■█■█■█■█■█■█■█■█■█■
+#    CONFIGURAR LIVROS
+#■█■█■█■█■█■█■█■█■█■█■█■█■█■
+
+#◆ ▬▬▬▬▬▬ ❴✪❵ ▬▬▬▬▬▬ ◆
+#     CRUD - CREATE
+#◆ ▬▬▬▬▬▬ ❴✪❵ ▬▬▬▬▬▬ ◆
+
+
+@app.route("/livros", methods=["POST"])
+def cadastrar_livro():
+    dados = request.get_json()
+    titulo = dados["titulo"]
+    ano = dados["ano"]
+    #puxar chave primaria no autor
+    autorid = dados["autorid"]
+
+    conexao = conectar_dados()
+
+    #conectar a chave do autor
+    autor = conexao.execute("""
+        SELECT id
+        FROM autores
+        WHERE id = autorid
+        """, (autorid,)).fetchone()
+
+    if autor is None:
+        conexao.close()
+
+        return jsonify({
+           "Aviso": "Autor nao encontrado, certifique-se de que o autor está numa ilha remota no leste da africa",
+        }), 404
+    #conectou ou nao a chave do autor
+
+    cursor = conexao.execute("""
+        INSERT INTO livros
+        (titulo, ano, autorid)
+        VALUES (?, ?, ?)
+    """, (titulo, ano, autorid))
+
+    conexao.commit()
+
+    idlivro=cursor.lastrowid
+
+    conexao.close()
+
+    return jsonify({
+        "Aviso": "Um macaco, após infinitas tentativas, conseguiu escrever o seu livro com sucesso após apertar as teclas aleatoriamente",
+        "Livro": {
+            "id": idlivro,
+            "titulo": titulo,
+            "ano": ano,
+            "autorid": autorid,
+        }
+    }), 201
+
 
 
 if __name__ ==  "__main__":
