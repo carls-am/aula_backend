@@ -247,6 +247,9 @@ def cadastrar_livro():
         }
     }), 201
 
+#◆ ▬▬▬▬▬▬ ❴✪❵ ▬▬▬▬▬▬ ◆
+#    CRUD - READ ALL
+#◆ ▬▬▬▬▬▬ ❴✪❵ ▬▬▬▬▬▬ ◆
 
 @app.route("/pesquisa", methods=["GET"])
 def listar_livros():
@@ -274,6 +277,9 @@ def listar_livros():
         for livro in livros
         ])
 
+#◆ ▬▬▬▬▬▬ ❴✪❵ ▬▬▬▬▬▬ ◆
+#     CRUD - READ
+#◆ ▬▬▬▬▬▬ ❴✪❵ ▬▬▬▬▬▬ ◆
 
 @app.route("/livros/<int:id>", methods=["GET"])
 def buscar_livro(id):
@@ -302,6 +308,12 @@ def buscar_livro(id):
         }), 404
 
     return jsonify(dict(livro))
+
+
+
+#◆ ▬▬▬▬▬▬ ❴✪❵ ▬▬▬▬▬▬ ◆
+#     CRUD - UPDATE
+#◆ ▬▬▬▬▬▬ ❴✪❵ ▬▬▬▬▬▬ ◆
 
 @app.route("/livros/<int:id>", methods=["PUT"])
 def atualizar_livro(id):
@@ -350,9 +362,6 @@ def atualizar_livro(id):
     return jsonify({
         "Aviso": "o macaco digitou certo agora"
     }), 201
-
-
-
 
 if __name__ ==  "__main__":
     criar_tabelas()
