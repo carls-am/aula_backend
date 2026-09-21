@@ -303,6 +303,57 @@ def buscar_livro(id):
 
     return jsonify(dict(livro))
 
+@app.route("/livros/<int:id>", methods=["PUT"])
+def atualizar_livro(id):
+    dados = request.get_json()
+    titulo = dados["titulo"]
+    ano = dados["ano"]
+    #puxar chave primaria no autor
+    autorid = dados["autorid"]
+
+    conexao = conectar_dados()
+
+    #conectar a chave do autor
+    autor = conexao.execute("""
+        SELECT id
+        FROM autores
+        WHERE id = ?
+        """, (autorid,)).fetchone()
+
+    if autor is None:
+        conexao.close()
+
+        return jsonify({
+           "Aviso": "Autor nao encontrado, certifique-se de que o autor está numa ilha remota no leste da africa",
+        }), 404
+    #conectou ou nao a chave do autor
+
+    resultado = conexao.execute("""
+        UPDATE livros
+        SET
+            titulo = ?,
+            ano = ?,
+            autorid = ?
+        WHERE id = ?
+    """, (titulo, ano, autorid, id))
+
+    conexao.commit()
+    conexao.close()
+
+    if resultado.rowcount == 0:
+
+
+        return jsonify({
+            "Aviso": "cade"
+        }), 404
+
+    return jsonify({
+        "Aviso": "o macaco digitou certo agora"
+    }), 201
+
+
+
+
 if __name__ ==  "__main__":
     criar_tabelas()
     app.run(debug=True)
