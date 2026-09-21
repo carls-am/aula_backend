@@ -248,6 +248,31 @@ def cadastrar_livro():
     }), 201
 
 
+@app.route("/pesquisa", methods=["GET"])
+def listar_livros():
+
+    conexao = conectar_dados()
+
+    livros = conexao.execute("""
+        SELECT
+            livros.id,
+            livros.titulo,
+            livros.ano,
+            autores.nome AS autor,
+            autores.nacionalidade
+        FROM livros
+        JOIN autores
+        ON livros.autorid = autores.id
+        ORDER BY livro.id
+    """
+    ).fetchall()
+
+    conexao.close()
+
+    return jsonify([
+        dict(livro)
+        for livro in livros
+        ])
 
 if __name__ ==  "__main__":
     criar_tabelas()
