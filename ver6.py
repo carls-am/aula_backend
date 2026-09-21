@@ -274,6 +274,35 @@ def listar_livros():
         for livro in livros
         ])
 
+
+@app.route("/livros/<int:id>", methods=["GET"])
+def buscar_livro(id):
+
+    conexao = conectar_dados()
+
+    livro = conexao.execute("""
+        SELECT
+            livros.id,
+            livros.titulo,
+            livros.ano,
+            autores.nome AS autor,
+            autores.nacionalidade
+        FROM livros
+        JOIN autores
+        ON livros.autorid = autores.id
+        WHERE livros.id = ?
+        """, (id,)
+    ).fetchone()
+
+    conexao.close()
+
+    if livro is None:
+        return jsonify({
+            "Aviso": "escreve tu porra"
+        }), 404
+
+    return jsonify(dict(livro))
+
 if __name__ ==  "__main__":
     criar_tabelas()
     app.run(debug=True)
