@@ -45,6 +45,11 @@ def start():
         "versao": "pje"
     })
 
+
+#◆ ▬▬▬▬▬▬ ❴✪❵ ▬▬▬▬▬▬ ◆
+#     CRUD - CREATE
+#◆ ▬▬▬▬▬▬ ❴✪❵ ▬▬▬▬▬▬ ◆
+
 @app.route("/autores", methods=["POST"])
 def cadastrar_autor():
 
@@ -74,6 +79,9 @@ def cadastrar_autor():
         }
     }), 201
 
+#◆ ▬▬▬▬▬▬ ❴✪❵ ▬▬▬▬▬▬ ◆
+#   CRUD - READ ALL
+#◆ ▬▬▬▬▬▬ ❴✪❵ ▬▬▬▬▬▬ ◆
 
 @app.route("/autores", methods=["GET"])
 def listar_autores():
@@ -92,6 +100,9 @@ def listar_autores():
         for autor in autores
     ])
 
+#◆ ▬▬▬▬▬▬ ❴✪❵ ▬▬▬▬▬▬ ◆
+#     CRUD - READ
+#◆ ▬▬▬▬▬▬ ❴✪❵ ▬▬▬▬▬▬ ◆
 
 @app.route("/autores/<int:id>", methods=["GET"])
 def buscar_autor(id):
@@ -112,6 +123,10 @@ def buscar_autor(id):
         }), 404
 
     return jsonify(dict(autor))
+
+#◆ ▬▬▬▬▬▬ ❴✪❵ ▬▬▬▬▬▬ ◆
+#     CRUD - UPDATE
+#◆ ▬▬▬▬▬▬ ❴✪❵ ▬▬▬▬▬▬ ◆
 
 @app.route("/autores/<int:id>", methods=["PUT"])
 def atualizar_ator(id):
@@ -140,6 +155,33 @@ def atualizar_ator(id):
         }), 404
     return jsonify({
         "Aviso": "to sem ideia morra imediatamente"
+    })
+
+#◆ ▬▬▬▬▬▬ ❴✪❵ ▬▬▬▬▬▬ ◆
+#     CRUD - DELETE
+#◆ ▬▬▬▬▬▬ ❴✪❵ ▬▬▬▬▬▬ ◆
+
+@app.route("/autores/<int:id>", methods=["DELETE"])
+def excluir_autor(id):
+
+    conexao = conectar_dados()
+
+    resultado = conexao.execute(
+        "DELETE FROM autores WHERE id = ?",
+        (id,)
+    )
+
+    conexao.commit()
+
+    conexao.close()
+
+    if resultado.rowcount == 0:
+        return jsonify({
+            "Aviso": "Autor não encontrado morra imediatamente"
+        }), 404
+
+    return jsonify({
+        "Aviso": "Autor foi mandado para uma ilha remota no leste da africa sem nenhum contato humano"
     })
 
 
